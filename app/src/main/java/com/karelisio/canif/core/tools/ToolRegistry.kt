@@ -3,6 +3,9 @@ package com.karelisio.canif.core.tools
 import android.content.Context
 import com.karelisio.canif.tools.media.mediaTools
 import com.karelisio.canif.tools.instruments.instrumentTools
+import com.karelisio.canif.tools.color.colorTools
+import com.karelisio.canif.tools.outdoor.outdoorTools
+import com.karelisio.canif.tools.qr.qrTools
 import java.text.Normalizer
 
 object ToolRegistry {
@@ -13,6 +16,9 @@ object ToolRegistry {
             instrumentTools,
             com.karelisio.canif.tools.time.timeTools,
             com.karelisio.canif.tools.audio.audioTools,
+            qrTools,
+            colorTools,
+            outdoorTools,
         ).flatten()
     }
 
