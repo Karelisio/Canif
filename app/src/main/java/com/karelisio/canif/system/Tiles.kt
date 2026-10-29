@@ -7,6 +7,7 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.karelisio.canif.R
 import com.karelisio.canif.core.i18n.tr
+import com.karelisio.canif.tools.audio.MetronomeController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,7 +39,34 @@ abstract class OpenToolTile(private val toolId: String, private val iconRes: Int
 
 class LevelTile : OpenToolTile("level", R.drawable.tile_level, { tr("Niveau", "Level") })
 class TunerTile : OpenToolTile("tuner", R.drawable.tile_tuner, { tr("Accordeur", "Tuner") })
-class MetronomeTile : OpenToolTile("metronome", R.drawable.tile_metronome, { tr("Métronome", "Metronome") })
+/** Starts / stops the metronome in place; opens the tool if the service cannot start from here. */
+class MetronomeTile : OpenToolTile("metronome", R.drawable.tile_metronome, { tr("Métronome", "Metronome") }) {
+    private var scope: CoroutineScope? = null
+
+    override fun onStartListening() {
+        super.onStartListening()
+        scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate).also { s ->
+            s.launch { MetronomeController.isRunning.collect { render(it) } }
+        }
+    }
+
+    override fun onStopListening() {
+        scope?.cancel()
+        scope = null
+    }
+
+    override fun onClick() {
+        runCatching { MetronomeController.toggle(applicationContext) }.onFailure { super.onClick() }
+    }
+
+    private fun render(running: Boolean) {
+        qsTile?.apply {
+            state = if (running) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+            if (Build.VERSION.SDK_INT >= 29) subtitle = if (running) "${MetronomeController.config.value.bpm} BPM" else null
+            updateTile()
+        }
+    }
+}
 
 /** Toggleable flashlight tile. */
 class LampTile : TileService() {

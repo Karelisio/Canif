@@ -12,6 +12,7 @@ object ToolRegistry {
             mediaTools,
             instrumentTools,
             com.karelisio.canif.tools.time.timeTools,
+            com.karelisio.canif.tools.audio.audioTools,
         ).flatten()
     }
 
