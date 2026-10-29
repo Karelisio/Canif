@@ -11,6 +11,7 @@ object ToolRegistry {
         listOf<List<Tool>>(
             mediaTools,
             instrumentTools,
+            com.karelisio.canif.tools.time.timeTools,
         ).flatten()
     }
 
