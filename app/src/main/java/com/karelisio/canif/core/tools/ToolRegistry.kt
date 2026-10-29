@@ -2,6 +2,7 @@ package com.karelisio.canif.core.tools
 
 import android.content.Context
 import com.karelisio.canif.tools.calc.calcTools
+import com.karelisio.canif.tools.random.randomTools
 import com.karelisio.canif.tools.text.textTools
 import java.text.Normalizer
 
@@ -11,6 +12,7 @@ object ToolRegistry {
         listOf<List<Tool>>(
             calcTools,
             textTools,
+            randomTools,
         ).flatten()
     }
 
