@@ -4,6 +4,9 @@ import android.app.Application
 import com.karelisio.canif.core.i18n.Lang
 import com.karelisio.canif.core.settings.SettingsRepository
 import com.karelisio.canif.data.CanifDatabase
+import com.karelisio.canif.data.ToolRepository
+import com.karelisio.canif.system.Shortcuts
+import com.karelisio.canif.system.Widgets
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,6 +23,10 @@ class CanifApp : Application() {
         super.onCreate()
         instance = this
         appScope.launch { settings.settings.collect { Lang.preference = it.language } }
+        ToolRepository.onFavoritesChanged = { ids ->
+            Shortcuts.updateDynamic(this, ids)
+            Widgets.refreshFavorites(this)
+        }
     }
 
     companion object {

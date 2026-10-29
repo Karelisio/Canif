@@ -2,4 +2,12 @@
 <resources>
     <string name="app_name" translatable="false">Canif</string>
     <string name="share_label">Ouvrir avec Canif</string>
+    <string name="widget_favorites">Favoris Canif</string>
+    <string name="widget_favorites_desc">Vos outils favoris, à portée de doigt</string>
+    <string name="widget_lamp">Lampe</string>
+    <string name="widget_lamp_desc">Allumer ou éteindre la lampe torche</string>
+    <string name="tile_lamp">Lampe</string>
+    <string name="tile_level">Niveau</string>
+    <string name="tile_tuner">Accordeur</string>
+    <string name="tile_metronome">Métronome</string>
 </resources>

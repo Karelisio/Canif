@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="share_label">Open with Canif</string>
+    <string name="widget_favorites">Canif favorites</string>
+    <string name="widget_favorites_desc">Your favorite tools at your fingertips</string>
+    <string name="widget_lamp">Flashlight</string>
+    <string name="widget_lamp_desc">Turn the flashlight on or off</string>
+    <string name="tile_lamp">Flashlight</string>
+    <string name="tile_level">Level</string>
+    <string name="tile_tuner">Tuner</string>
+    <string name="tile_metronome">Metronome</string>
 </resources>
