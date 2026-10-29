@@ -88,6 +88,7 @@ fun SettingsScreen(onBack: () -> Unit, onOpen: (String) -> Unit) {
                     { scope.launch { repo.setTheme(it) } },
                 )
                 SwitchRow(tr("Couleurs dynamiques (Material You)", "Dynamic colors (Material You)"), s.dynamicColor) { scope.launch { repo.setDynamicColor(it) } }
+                SwitchRow(tr("Fond coloré", "Tinted background"), s.tintedSurfaces) { scope.launch { repo.setTintedSurfaces(it) } }
                 Label(tr("Langue", "Language"))
                 ChoiceRow(listOf("system", "fr", "en"), s.language, { when (it) { "fr" -> "Français"; "en" -> "English"; else -> tr("Système", "System") } }, { scope.launch { repo.setLanguage(it) } })
             }

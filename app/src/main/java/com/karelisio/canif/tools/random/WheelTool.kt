@@ -47,6 +47,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -137,11 +138,15 @@ internal fun WheelScreen() {
         scope.launch { settings.setString(KEY, list.joinToString(SEP)) }
     }
 
-    // Haptic tick and pointer flick each time a sector boundary passes under the pointer.
+    val sound = remember { WheelSound() }
+    DisposableEffect(Unit) { onDispose { sound.release() } }
+
+    // Haptic tick, click sound and pointer flick each time a sector boundary passes under the pointer.
     LaunchedEffect(opts.size) {
         snapshotFlow { sectorAt(rotation.value, opts.size) }.distinctUntilChanged().collect {
             if (spinning) {
                 haptics.segment()
+                sound.tick()
                 if (!reduce) launch {
                     pointerKick.snapTo(-22f)
                     pointerKick.animateTo(0f, spring(dampingRatio = 0.35f, stiffness = Spring.StiffnessHigh))
@@ -164,6 +169,7 @@ internal fun WheelScreen() {
                 }
                 winner = sectorAt(rotation.value, opts.size)
                 haptics.confirm()
+                sound.win()
                 // Keep the angle small to avoid float precision loss after many spins.
                 rotation.snapTo(rotation.value % 360f)
             } finally {

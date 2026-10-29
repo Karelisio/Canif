@@ -22,6 +22,7 @@ enum class UnitSystem { METRIC, IMPERIAL }
 data class AppSettings(
     val theme: ThemeMode = ThemeMode.SYSTEM,
     val dynamicColor: Boolean = true,
+    val tintedSurfaces: Boolean = true,
     val haptics: Boolean = true,
     val referenceA4: Int = 440,
     val units: UnitSystem = UnitSystem.METRIC,
@@ -36,6 +37,7 @@ class SettingsRepository(private val context: Context) {
     private object Keys {
         val theme = stringPreferencesKey("theme")
         val dynamic = booleanPreferencesKey("dynamic_color")
+        val tinted = booleanPreferencesKey("tinted_surfaces")
         val haptics = booleanPreferencesKey("haptics")
         val a4 = intPreferencesKey("reference_a4")
         val units = stringPreferencesKey("units")
@@ -47,6 +49,7 @@ class SettingsRepository(private val context: Context) {
         AppSettings(
             theme = p[Keys.theme]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() } ?: ThemeMode.SYSTEM,
             dynamicColor = p[Keys.dynamic] ?: true,
+            tintedSurfaces = p[Keys.tinted] ?: true,
             haptics = p[Keys.haptics] ?: true,
             referenceA4 = p[Keys.a4] ?: 440,
             units = p[Keys.units]?.let { runCatching { UnitSystem.valueOf(it) }.getOrNull() } ?: UnitSystem.METRIC,
@@ -59,6 +62,7 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun setTheme(v: ThemeMode) = store.edit { it[Keys.theme] = v.name }
     suspend fun setDynamicColor(v: Boolean) = store.edit { it[Keys.dynamic] = v }
+    suspend fun setTintedSurfaces(v: Boolean) = store.edit { it[Keys.tinted] = v }
     suspend fun setHaptics(v: Boolean) = store.edit { it[Keys.haptics] = v }
     suspend fun setReferenceA4(v: Int) = store.edit { it[Keys.a4] = v.coerceIn(432, 445) }
     suspend fun setUnits(v: UnitSystem) = store.edit { it[Keys.units] = v.name }

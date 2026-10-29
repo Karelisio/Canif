@@ -178,6 +178,7 @@
             android:showWhenLocked="true"
             android:turnScreenOn="true"
             android:theme="@style/Theme.Canif" />
+        <service
             android:name=".tools.audio.MetronomeService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
