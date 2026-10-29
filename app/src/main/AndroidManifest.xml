@@ -75,5 +75,10 @@
         </activity>
 
         <receiver android:name=".update.InstallResultReceiver" android:exported="false" />
+
+        <service
+            android:name=".tools.audio.MetronomeService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
     </application>
 </manifest>
