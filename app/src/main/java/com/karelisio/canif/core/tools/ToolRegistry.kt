@@ -1,12 +1,16 @@
 package com.karelisio.canif.core.tools
 
 import android.content.Context
+import com.karelisio.canif.tools.calc.calcTools
+import com.karelisio.canif.tools.text.textTools
 import java.text.Normalizer
 
 object ToolRegistry {
     /** Every tool of Canif, in display order. */
     val all: List<Tool> by lazy {
         listOf<List<Tool>>(
+            calcTools,
+            textTools,
         ).flatten()
     }
 
