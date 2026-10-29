@@ -7,6 +7,7 @@ object ToolRegistry {
     /** Every tool of Canif, in display order. */
     val all: List<Tool> by lazy {
         listOf<List<Tool>>(
+            com.karelisio.canif.tools.time.timeTools,
         ).flatten()
     }
 
