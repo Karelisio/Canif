@@ -1,23 +1,31 @@
 package com.karelisio.canif.core.tools
 
 import android.content.Context
-import com.karelisio.canif.tools.media.mediaTools
-import com.karelisio.canif.tools.instruments.instrumentTools
+import com.karelisio.canif.tools.audio.audioTools
+import com.karelisio.canif.tools.calc.calcTools
 import com.karelisio.canif.tools.color.colorTools
+import com.karelisio.canif.tools.instruments.instrumentTools
+import com.karelisio.canif.tools.media.mediaTools
 import com.karelisio.canif.tools.outdoor.outdoorTools
 import com.karelisio.canif.tools.qr.qrTools
+import com.karelisio.canif.tools.random.randomTools
+import com.karelisio.canif.tools.text.textTools
+import com.karelisio.canif.tools.time.timeTools
 import java.text.Normalizer
 
 object ToolRegistry {
     /** Every tool of Canif, in display order. */
     val all: List<Tool> by lazy {
-        listOf<List<Tool>>(
-            mediaTools,
+        listOf(
+            calcTools,
             instrumentTools,
-            com.karelisio.canif.tools.time.timeTools,
-            com.karelisio.canif.tools.audio.audioTools,
+            audioTools,
+            textTools,
+            mediaTools,
+            randomTools,
             qrTools,
             colorTools,
+            timeTools,
             outdoorTools,
         ).flatten()
     }
