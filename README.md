@@ -30,7 +30,7 @@ Prérequis : JDK 17+ et le SDK Android (platform 36).
 
 ```bash
 ./gradlew :app:assembleDebug        # APK de debug (id com.karelisio.canif.debug)
-./gradlew :app:testDebugUnitTest    # tests unitaires
+./gradlew :app:testDebugUnitTest    # tests unitaires + captures d'écran (Robolectric) dans screenshots/
 ```
 
 Un `assembleRelease` local sans keystore est signé avec la clé de debug (pratique pour tester R8).

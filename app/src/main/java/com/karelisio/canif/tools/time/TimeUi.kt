@@ -194,21 +194,19 @@ fun ButtonLabel(icon: ImageVector, text: String?) {
 
 // ---------------------------------------------------------------- reliability cards
 
+/** One compact line of the reliability card: icon, title, explanation and a small action. */
 @Composable
 fun WarningCard(icon: ImageVector, title: String, text: String, action: String, onAction: () -> Unit) {
     val c = MaterialTheme.colorScheme
-    CanifCard(color = c.errorContainer) {
-        Row(verticalAlignment = Alignment.Top) {
-            Icon(icon, null, tint = c.onErrorContainer, modifier = Modifier.padding(top = 2.dp).size(28.dp))
-            Spacer(Modifier.width(14.dp))
-            Column(Modifier.weight(1f)) {
-                Text(title, style = MaterialTheme.typography.titleMedium, color = c.onErrorContainer)
-                Spacer(Modifier.height(4.dp))
-                Text(text, style = MaterialTheme.typography.bodyMedium, color = c.onErrorContainer.copy(alpha = 0.85f))
-                Spacer(Modifier.height(10.dp))
-                FilledTonalButton(onClick = onAction) { Text(action) }
-            }
+    Row(Modifier.fillMaxWidth().padding(vertical = 6.dp), verticalAlignment = Alignment.Top) {
+        Icon(icon, null, tint = c.onTertiaryContainer, modifier = Modifier.padding(top = 2.dp).size(22.dp))
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.titleSmall, color = c.onTertiaryContainer)
+            Text(text, style = MaterialTheme.typography.bodySmall, color = c.onTertiaryContainer.copy(alpha = 0.8f))
         }
+        Spacer(Modifier.width(8.dp))
+        FilledTonalButton(onClick = onAction, contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 14.dp)) { Text(action) }
     }
 }
 
@@ -234,7 +232,14 @@ fun ReliabilityCards(exactAlarms: Boolean, fullScreen: Boolean, onChanged: () ->
     val exactMissing = exactAlarms && AppPermission.EXACT_ALARMS.applicable && !AppPermission.EXACT_ALARMS.isGranted(context)
     val batteryMissing = !AppPermission.BATTERY.isGranted(context)
     val fsiMissing = fullScreen && !canUseFullScreenIntent(context)
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    AnimatedVisibility(exactMissing || batteryMissing || fsiMissing, enter = fadeIn() + expandVertically(), exit = fadeOut() + shrinkVertically()) {
+    CanifCard(color = MaterialTheme.colorScheme.tertiaryContainer, padding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 12.dp)) {
+        Text(
+            tr("Pour une sonnerie fiable", "For a reliable alarm"),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onTertiaryContainer,
+            modifier = Modifier.padding(bottom = 2.dp),
+        )
         AnimatedVisibility(exactMissing, enter = fadeIn() + expandVertically(), exit = fadeOut() + shrinkVertically()) {
             WarningCard(
                 AppPermission.EXACT_ALARMS.icon,
@@ -276,6 +281,7 @@ fun ReliabilityCards(exactAlarms: Boolean, fullScreen: Boolean, onChanged: () ->
                 }.onFailure { runCatching { context.startActivity(AppPermission.appDetails(context).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) } }
             }
         }
+    }
     }
 }
 

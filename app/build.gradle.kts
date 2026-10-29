@@ -63,6 +63,14 @@ android {
     packaging {
         resources.excludes += setOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/DEPENDENCIES", "org/bouncycastle/pqc/**")
     }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all {
+            it.systemProperty("robolectric.graphicsMode", "NATIVE")
+            it.systemProperty("screenshots.dir", rootProject.file("screenshots").absolutePath)
+            it.maxHeapSize = "3g"
+        }
+    }
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
@@ -119,4 +127,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     debugImplementation(libs.androidx.compose.ui.tooling)
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

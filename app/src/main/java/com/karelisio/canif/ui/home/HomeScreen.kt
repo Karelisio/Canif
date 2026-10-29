@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -360,7 +361,7 @@ private fun CategoryCard(category: Category, count: Int, open: Boolean, onClick:
             .fillMaxWidth()
             .animateContentSize(spring(dampingRatio = 0.8f, stiffness = Spring.StiffnessMediumLow)),
     ) {
-        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.heightIn(min = 92.dp).padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
             CategoryBadge(category, category.icon, size = 44.dp, rotation = badgeRot)
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {

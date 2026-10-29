@@ -158,7 +158,7 @@ private fun FileOrderList(uris: MutableList<Uri>, supporting: (Uri) -> String?, 
 }
 
 @Composable
-private fun PdfResult(file: File, pages: Int, onReset: () -> Unit) {
+private fun PdfResult(file: File, pages: Int) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -179,7 +179,6 @@ private fun PdfResult(file: File, pages: Int, onReset: () -> Unit) {
                 }
             } else null,
         )
-        @Suppress("UNUSED_EXPRESSION") onReset
     }
 }
 
@@ -242,7 +241,7 @@ fun ImagesToPdfScreen(initial: List<Uri>) {
             if (busy) CircularWavyProgressIndicator(Modifier.size(20.dp)) else Text(tr("Créer le PDF", "Create PDF"))
         }
         if (error) Text(tr("Impossible de créer le PDF.", "Could not create the PDF."), color = MaterialTheme.colorScheme.error)
-        AnimatedVisibility(result != null) { result?.let { (f, p) -> PdfResult(f, p) { result = null } } }
+        AnimatedVisibility(result != null) { result?.let { (f, p) -> PdfResult(f, p) } }
     }
 }
 
@@ -272,6 +271,7 @@ fun PdfMergeScreen(initial: List<Uri>) {
                 tr("Choisissez au moins deux fichiers, puis ordonnez-les.", "Pick at least two files, then order them."),
                 tr("Choisir des PDF", "Pick PDFs"),
                 pick,
+                icon = Icons.Rounded.PictureAsPdf,
             )
             return@ToolColumn
         }
@@ -314,6 +314,6 @@ fun PdfMergeScreen(initial: List<Uri>) {
             if (busy) CircularWavyProgressIndicator(Modifier.size(20.dp)) else Text(tr("Fusionner", "Merge"))
         }
         if (error) Text(tr("Échec de la fusion (fichier protégé ?).", "Merge failed (protected file?)."), color = MaterialTheme.colorScheme.error)
-        AnimatedVisibility(result != null) { result?.let { (f, p) -> PdfResult(f, p) { result = null } } }
+        AnimatedVisibility(result != null) { result?.let { (f, p) -> PdfResult(f, p) } }
     }
 }

@@ -46,7 +46,7 @@ import com.karelisio.canif.ui.components.cascade
 
 /** Empty state inviting to pick files. */
 @Composable
-fun PickPrompt(title: String, body: String, button: String, onPick: () -> Unit) {
+fun PickPrompt(title: String, body: String, button: String, onPick: () -> Unit, icon: androidx.compose.ui.graphics.vector.ImageVector = Icons.Rounded.Image) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -55,10 +55,10 @@ fun PickPrompt(title: String, body: String, button: String, onPick: () -> Unit) 
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         MorphingBlob(size = 150.dp, from = MaterialShapes.Clover4Leaf, to = MaterialShapes.Cookie9Sided) {
-            Icon(Icons.Rounded.Image, null, Modifier.size(56.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
+            Icon(icon, null, Modifier.size(56.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
         }
-        Text(title, style = MaterialTheme.typography.headlineSmall)
-        Text(body, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(title, style = MaterialTheme.typography.headlineSmall, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+        Text(body, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
         Button(onClick = onPick) { Text(button) }
     }
 }
