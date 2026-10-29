@@ -2,6 +2,7 @@ package com.karelisio.canif.core.tools
 
 import android.content.Context
 import com.karelisio.canif.tools.media.mediaTools
+import com.karelisio.canif.tools.instruments.instrumentTools
 import java.text.Normalizer
 
 object ToolRegistry {
@@ -9,6 +10,7 @@ object ToolRegistry {
     val all: List<Tool> by lazy {
         listOf<List<Tool>>(
             mediaTools,
+            instrumentTools,
         ).flatten()
     }
 
