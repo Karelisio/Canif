@@ -168,5 +168,3 @@ fun LinkRow(icon: ImageVector, title: String, subtitle: String?, onClick: () -> 
     }
 }
 
-@Suppress("unused")
-private val UpdateIcon = Icons.Rounded.SystemUpdate

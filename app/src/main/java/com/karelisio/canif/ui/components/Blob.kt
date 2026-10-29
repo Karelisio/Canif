@@ -88,5 +88,3 @@ fun AnimatedCheck(visible: Boolean, modifier: Modifier = Modifier, size: Dp = 48
     }
 }
 
-@Suppress("unused")
-private val Zero = Offset.Zero

@@ -142,5 +142,3 @@ fun Modifier.fanUnfold(progress: Float, angle: Float = -64f): Modifier = graphic
     scaleX = sc; scaleY = sc
 }
 
-@Suppress("unused")
-private val Unused = Color.Unspecified

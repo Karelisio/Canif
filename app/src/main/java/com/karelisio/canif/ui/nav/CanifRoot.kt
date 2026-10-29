@@ -11,13 +11,17 @@ import com.karelisio.canif.ui.components.LocalNavScope
 import com.karelisio.canif.ui.onboarding.OnboardingScreen
 import com.karelisio.canif.ui.settings.PermissionsScreen
 import com.karelisio.canif.ui.share.ShareTargetScreen
+import com.karelisio.canif.update.UpdateSheetHost
+import com.karelisio.canif.update.Updater
 import kotlinx.coroutines.launch
 
 @Composable
 fun CanifRoot(nav: NavHostController, start: String, sharedPayload: () -> SharedPayload?, showIntro: Boolean) {
     LaunchedEffect(Unit) {
         if (sharedPayload() != null && start == Routes.HOME) nav.navigate(Routes.SHARE)
+        Updater.checkIfDue()
     }
+    UpdateSheetHost()
     CanifNavHost(nav, start, sharedPayload, showIntro) {
         composable(Routes.ONBOARDING) {
             CompositionLocalProvider(LocalNavScope provides this) {

@@ -73,5 +73,7 @@
                 <data android:mimeType="application/pdf" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".update.InstallResultReceiver" android:exported="false" />
     </application>
 </manifest>
