@@ -24,6 +24,8 @@ android {
         versionCode = appVersionCode
         versionName = appVersionName
         buildConfigField("String", "GITHUB_REPO", "\"Karelisio/Canif\"")
+        // Phones only: keeps the bundled ML Kit native library small.
+        ndk { abiFilters += setOf("arm64-v8a", "armeabi-v7a") }
     }
 
     signingConfigs {
@@ -59,7 +61,7 @@ android {
         buildConfig = true
     }
     packaging {
-        resources.excludes += setOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/DEPENDENCIES")
+        resources.excludes += setOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/DEPENDENCIES", "org/bouncycastle/pqc/**")
     }
     dependenciesInfo {
         includeInApk = false
