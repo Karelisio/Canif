@@ -17,3 +17,6 @@
 keystore.properties
 signing.properties
 *.b64
+
+# Claude Code local state (agent worktrees)
+/.claude/
