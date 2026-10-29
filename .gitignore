@@ -1,0 +1,23 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+# Secrets — never commit
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+*.b64
+
+# Claude Code local state (agent worktrees)
+/.claude/
+/screenshots/

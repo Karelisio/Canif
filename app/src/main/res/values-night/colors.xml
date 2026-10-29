@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_background">#101418</color>
+    <color name="knife_handle">#FFB68E</color>
+    <color name="knife_rivet">#562000</color>
+</resources>

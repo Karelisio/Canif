@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#2F5A78</color>
+    <color name="knife_handle_icon">#E07A3C</color>
+    <color name="knife_blade_1">#EAF2F8</color>
+    <color name="knife_blade_2">#C7D6E2</color>
+    <color name="knife_blade_3">#A9BDCD</color>
+    <color name="knife_rivet_icon">#2F5A78</color>
+    <!-- Splash: matches the in-app surface and the tertiary handle -->
+    <color name="splash_background">#F7F9FD</color>
+    <color name="knife_handle">#9A4A1C</color>
+    <color name="knife_rivet">#FFFFFF</color>
+</resources>

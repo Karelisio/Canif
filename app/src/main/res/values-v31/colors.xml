@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_background">@android:color/system_neutral1_10</color>
+    <color name="knife_handle">@android:color/system_accent3_600</color>
+    <color name="knife_rivet">@android:color/system_accent3_0</color>
+</resources>

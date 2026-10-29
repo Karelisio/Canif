@@ -1,0 +1,100 @@
+name: Release
+
+# Every push on main builds the app. When the version in VERSION has no tag yet,
+# a signed APK is published as a GitHub Release (vX.Y.Z) with its changelog.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read version
+        id: version
+        run: |
+          V=$(tr -d '[:space:]' < VERSION)
+          if ! [[ "$V" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "::error::VERSION must be X.Y.Z (got '$V')"; exit 1; fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$V" >/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::v$V already released — bump VERSION to publish a new release."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build check (already released)
+        if: steps.version.outputs.exists == 'true'
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Decode keystore
+        if: steps.version.outputs.exists == 'false'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then echo "::error::Missing KEYSTORE_BASE64 secret"; exit 1; fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/canif.jks"
+
+      - name: Build signed release APK
+        if: steps.version.outputs.exists == 'false'
+        env:
+          CANIF_KEYSTORE_PATH: ${{ runner.temp }}/canif.jks
+          CANIF_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          CANIF_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          CANIF_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew :app:assembleRelease --stacktrace
+
+      - name: Verify signature
+        if: steps.version.outputs.exists == 'false'
+        run: |
+          APK=app/build/outputs/apk/release/app-release.apk
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          "$APKSIGNER" verify --print-certs "$APK"
+          cp "$APK" "Canif-v${{ steps.version.outputs.version }}.apk"
+
+      - name: Changelog
+        if: steps.version.outputs.exists == 'false'
+        run: |
+          V=${{ steps.version.outputs.version }}
+          # Section "## [X.Y.Z]" or "## X.Y.Z" of CHANGELOG.md, otherwise commit subjects since the last tag.
+          awk -v v="$V" '
+            /^## / { if (p) exit; if ($0 ~ "\\[?" v "\\]?") { p=1; next } }
+            p { print }
+          ' CHANGELOG.md > notes.md 2>/dev/null || true
+          if [ ! -s notes.md ]; then
+            PREV=$(git describe --tags --abbrev=0 2>/dev/null || true)
+            if [ -n "$PREV" ]; then RANGE="$PREV..HEAD"; else RANGE="HEAD"; fi
+            git log $RANGE --no-merges --pretty='- %s' > notes.md
+          fi
+          cat notes.md
+
+      - name: Publish release
+        if: steps.version.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          V=${{ steps.version.outputs.version }}
+          gh release create "v$V" "Canif-v$V.apk" \
+            --title "Canif $V" \
+            --notes-file notes.md \
+            --target "$GITHUB_SHA"

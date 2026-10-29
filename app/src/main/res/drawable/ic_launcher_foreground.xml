@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Canif: a stylized pocket knife, blade and tools slightly fanned out. Geometry shared with KnifeGeometry.kt -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <group android:pivotX="33" android:pivotY="66" android:rotation="-13">
+        <path android:fillColor="@color/knife_blade_3" android:pathData="M33,62 H66 C70,62 73,64 73,66.5 C73,69 70,70.5 67,70.5 L64,68 H33 Z" />
+    </group>
+    <group android:pivotX="33" android:pivotY="66" android:rotation="-32">
+        <path android:fillColor="@color/knife_blade_2" android:pathData="M33,63 H76 A3,3 0 0 1 76,69 H33 Z" />
+    </group>
+    <group android:pivotX="33" android:pivotY="66" android:rotation="-52">
+        <path android:fillColor="@color/knife_blade_1" android:pathData="M33,61 H75 C79,61 84,63 85,66 C77,69.5 58,71 33,71 Z" />
+    </group>
+    <path android:fillColor="@color/knife_handle_icon" android:pathData="M33,57 H75 A9,9 0 0 1 75,75 H33 A9,9 0 0 1 33,57 Z" />
+    <path android:fillColor="@color/knife_rivet_icon" android:pathData="M30,66 A3,3 0 1 0 36,66 A3,3 0 1 0 30,66 Z" />
+    <path android:fillColor="@color/knife_rivet_icon" android:pathData="M72.6,66 A2.4,2.4 0 1 0 77.4,66 A2.4,2.4 0 1 0 72.6,66 Z" />
+</vector>
