@@ -37,6 +37,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -86,6 +87,8 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -167,6 +170,14 @@ fun HomeScreen(onOpen: OpenTool, onSettings: () -> Unit, showIntroLogo: Boolean)
         }
     }
 
+    // Content scrolls under the transparent status bar: keep the clock readable.
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .windowInsetsTopHeight(WindowInsets.statusBars)
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.94f)),
+    )
+
     menuFor?.let { (tool, _) ->
         ToolMenu(tool, tool.id in favoriteIds, onDismiss = { menuFor = null }, context)
     }
@@ -183,15 +194,37 @@ private fun LazyGridScope.categoryItems(
     onOpen: OpenTool,
     onMenu: (Tool) -> Unit,
 ) {
-    var index = 0
-    categories.forEach { (category, tools) ->
-        val open = expanded == category.name
-        val i = index++
-        item(key = "cat-${category.name}", span = { GridItemSpan(if (open) maxLineSpan else (maxLineSpan / 2).coerceAtLeast(1)) }) {
-            CategoryCard(category, tools.size, open, { onToggle(category) }, Modifier.animateItem().cascade("cat-${category.name}", i + 3))
+    // Closed categories go two per row whatever the grid density (large fonts, small screens);
+    // the open one takes a full row and its tools fan out below it.
+    val rows = mutableListOf<List<Category>>()
+    var pending: Category? = null
+    categories.keys.forEach { c ->
+        if (c.name == expanded) {
+            pending?.let { rows += listOf(it); pending = null }
+            rows += listOf(c)
+        } else if (pending == null) {
+            pending = c
+        } else {
+            rows += listOf(pending!!, c); pending = null
         }
-        if (open) {
-            itemsIndexed(tools, key = { _, t -> "t-" + t.id }) { ti, tool ->
+    }
+    pending?.let { rows += listOf(it) }
+
+    rows.forEachIndexed { i, row ->
+        item(key = "cat-" + row.joinToString("-") { it.name }, span = { GridItemSpan(maxLineSpan) }) {
+            Row(
+                Modifier.animateItem().cascade("cat-" + row.first().name, i + 3),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                row.forEach { c ->
+                    CategoryCard(c, categories.getValue(c).size, c.name == expanded, { onToggle(c) }, Modifier.weight(1f))
+                }
+                if (row.size == 1 && row.first().name != expanded) Spacer(Modifier.weight(1f))
+            }
+        }
+        val open = row.firstOrNull { it.name == expanded }
+        if (open != null) {
+            itemsIndexed(categories.getValue(open), key = { _, t -> "t-" + t.id }) { ti, tool ->
                 FanTile(ti) {
                     ToolTile(tool, "cat", onOpen, onLongPress = { onMenu(tool) })
                 }
@@ -361,13 +394,13 @@ private fun CategoryCard(category: Category, count: Int, open: Boolean, onClick:
             .fillMaxWidth()
             .animateContentSize(spring(dampingRatio = 0.8f, stiffness = Spring.StiffnessMediumLow)),
     ) {
-        Row(Modifier.heightIn(min = 92.dp).padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-            CategoryBadge(category, category.icon, size = 44.dp, rotation = badgeRot)
-            Spacer(Modifier.width(12.dp))
+        Row(Modifier.heightIn(min = 92.dp).padding(horizontal = 12.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
+            CategoryBadge(category, category.icon, size = 40.dp, rotation = badgeRot)
+            Spacer(Modifier.width(10.dp))
             Column(Modifier.weight(1f)) {
                 Text(
                     category.title.text,
-                    style = MaterialTheme.typography.titleSmall,
+                    style = MaterialTheme.typography.titleSmall.copy(hyphens = Hyphens.Auto, lineBreak = LineBreak.Paragraph),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     color = if (open) category.onContainer(c) else c.onSurface,

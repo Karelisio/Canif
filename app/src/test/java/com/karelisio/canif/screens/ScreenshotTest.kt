@@ -34,7 +34,7 @@ import java.io.File
  */
 @RunWith(ParameterizedRobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(sdk = [35], qualifiers = "w411dp-h891dp-xxhdpi")
+@Config(sdk = [35], qualifiers = "w360dp-h780dp-xxhdpi", fontScale = 1.3f)
 class ScreenshotTest(private val screen: String, private val dark: Boolean) {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
